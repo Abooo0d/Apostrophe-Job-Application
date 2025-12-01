@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import logo from "./assets/logo.png";
 import Field from "./Components/Field";
@@ -37,9 +37,22 @@ function App() {
       setErrors((prev) => [...prev, "Please fill in all required fields"]);
     }
   };
+  useEffect(() => {
+    if (success.trim() !== "" || errors.length > 0) {
+      const timer = setTimeout(() => {
+        setSuccess("");
+        setErrors([]);
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmation("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, errors]);
 
   return (
-    <div className="app min-h-screen w-full flex justify-center items-center relative">
+    <div className="app min-h-screen w-full flex justify-center items-center relative overflow-hidden">
       <div className="form min-w-[40%] min-h-[500px] px-8 py-8 flex flex-col justify-center items-center gap-4  bg-sky-500/10 backdrop-blur-sm rounded-md border border-solid border-sky-300/30">
         <img src={logo} alt="logo" className="logo w-20 h-20 rounded-full" />
         <Field
@@ -110,20 +123,23 @@ function App() {
           </button>
         </div>
       </div>
-      {errors.length > 0 && (
-        <div className="errors mt-4 absolute top-[170px] right-0 w-[350px] bg-red-500/50 backdrop-blur-sm border-2 border-solid border-red-600 px-8 py-4 rounded-l-lg">
-          {errors.map((err, index) => (
-            <p key={index} className="text-white text-left text-lg">
-              {err}
-            </p>
-          ))}
-        </div>
-      )}
-      {success && (
-        <div className="errors mt-4 absolute top-[100px] right-0 w-[350px] bg-green-400/50 backdrop-blur-sm border-2 border-solid border-green-600 px-8 py-4 rounded-l-lg">
-          <p className="text-white text-left">{success}</p>
-        </div>
-      )}
+      <div
+        className={`errors mt-4 absolute top-[170px] w-[350px] bg-red-500/50 backdrop-blur-sm border-2 border-solid border-red-600 px-8 py-4 rounded-l-lg duration-200 ${
+          errors.length > 0 ? "right-0" : "right-[-350px]"
+        }`}
+      >
+        {errors.map((err, index) => (
+          <p key={index} className="text-white text-left text-lg">
+            {err}
+          </p>
+        ))}
+      </div>
+      <div
+        className={`errors mt-4 absolute top-[100px] right-0 w-[350px] bg-green-400/50 backdrop-blur-sm border-2 border-solid border-green-600 px-8 py-4 rounded-l-lg duration-200
+        ${success ? "right-0" : "right-[-350px]"}`}
+      >
+        <p className="text-white text-left">{success}</p>
+      </div>
     </div>
   );
 }
