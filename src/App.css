@@ -1,0 +1,7 @@
+@import "tailwindcss";
+.app {
+  background-image: url("./assets/beautiful-background-td7gsxerv3e.png");
+  background-size: cover;
+  background-position: center;
+  /* background-color: #e7e1c3; */
+}
